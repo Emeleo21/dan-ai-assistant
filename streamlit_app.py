@@ -9,12 +9,14 @@ API_KEY = os.environ.get("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
 if not API_KEY:
     raise RuntimeError("Set GEMINI_API_KEY as a Streamlit secret")
 
-client = genai.Client(api_key=API_KEY)
-
 st.title("Dan AI")
 
+# Store the client itself in session_state so it isn't recreated/discarded each rerun
+if "client" not in st.session_state:
+    st.session_state.client = genai.Client(api_key=API_KEY)
+
 if "chat" not in st.session_state:
-    st.session_state.chat = client.chats.create(
+    st.session_state.chat = st.session_state.client.chats.create(
         model="gemini-3.5-flash-lite",
         config={"tools": [get_weather, get_crypto_price, get_forex_rate]}
     )
