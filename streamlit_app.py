@@ -10,6 +10,8 @@ from forex_test import get_forex_rate
 from news_test import get_news
 from clock_test import get_local_time
 from search_test import web_search
+from pdf_tool import create_pdf
+
 
 st.set_page_config(page_title="Dan AI", page_icon="🤖", layout="centered")
 
@@ -58,12 +60,14 @@ with st.sidebar:
     st.caption("Built with Streamlit + Google Gemini. Live data from Open-Meteo, CoinGecko, Twelve Data, Google News and DuckDuckGo.")
 
 # ---------- Chat history ----------
-for msg in st.session_state.messages:
+for idx, msg in enumerate(st.session_state.messages):
     avatar = "🧑" if msg["role"] == "user" else "🤖"
     with st.chat_message(msg["role"], avatar=avatar):
         st.write(msg["content"])
         for name in msg.get("files", []):
             st.caption(f"📎 {name}")
+        for j, d in enumerate(msg.get("downloads", [])):
+            st.download_button(f"⬇️ Download {d['name']}", d["data"], d["name"], d["mime"], key=f"dl_{idx}_{j}")
 
 # ---------- New message ----------
 prompt = st.chat_input(
@@ -89,6 +93,7 @@ if prompt:
 
     parts = [types.Part.from_bytes(data=f.getvalue(), mime_type=f.type) for f in files]
 
+    st.session_state.pending_files = []
     with st.chat_message("assistant", avatar="🤖"):
         with st.spinner("Thinking..."):
             try:
@@ -97,4 +102,11 @@ if prompt:
                 answer = f"Error: {e}"
         st.write(answer)
 
-    st.session_state.messages.append({"role": "assistant", "content": answer})
+        downloads = st.session_state.pop("pending_files", [])
+        new_idx = len(st.session_state.messages)
+        for j, d in enumerate(downloads):
+            st.download_button(f"⬇️ Download {d['name']}", d["data"], d["name"], d["mime"], key=f"dl_{new_idx}_{j}")
+
+    st.session_state.messages.append(
+        {"role": "assistant", "content": answer, "downloads": downloads}
+    )
