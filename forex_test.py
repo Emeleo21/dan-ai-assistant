@@ -1,8 +1,13 @@
+import os
 import requests
 
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # on Streamlit Cloud, keys come from Secrets instead
 
-TWELVE_DATA_KEY = os.environ.get("TWELVEDATA_API_KEY") or st.secrets.get("TWELVEDATA_API_KEY")
+TWELVE_DATA_KEY = os.environ.get("TWELVEDATA_API_KEY")
 
 def get_forex_rate(base: str, target: str) -> str:
     """Get the current exchange rate between two currencies or assets, 
