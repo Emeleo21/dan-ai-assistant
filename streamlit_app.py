@@ -61,17 +61,37 @@ for msg in st.session_state.messages:
     avatar = "🧑" if msg["role"] == "user" else "🤖"
     with st.chat_message(msg["role"], avatar=avatar):
         st.write(msg["content"])
+        for name in msg.get("files", []):
+            st.caption(f"📎 {name}")
 
 # ---------- New message ----------
-if question := st.chat_input("Ask me anything..."):
-    st.session_state.messages.append({"role": "user", "content": question})
+prompt = st.chat_input(
+    "Ask me anything, or attach a PDF/image...",
+    accept_file=True,
+    file_type=["pdf", "png", "jpg", "jpeg", "webp"],
+)
+
+if prompt:
+    question = prompt.text or "Please summarize or describe the attached file."
+    files = prompt.files
+
+    st.session_state.messages.append(
+        {"role": "user", "content": question, "files": [f.name for f in files]}
+    )
     with st.chat_message("user", avatar="🧑"):
         st.write(question)
+        for f in files:
+            if f.type.startswith("image/"):
+                st.image(f)
+            else:
+                st.caption(f"📎 {f.name}")
+
+    parts = [types.Part.from_bytes(data=f.getvalue(), mime_type=f.type) for f in files]
 
     with st.chat_message("assistant", avatar="🤖"):
         with st.spinner("Thinking..."):
             try:
-                answer = st.session_state.chat.send_message(question).text
+                answer = st.session_state.chat.send_message(parts + [question]).text
             except Exception as e:
                 answer = f"Error: {e}"
         st.write(answer)
