@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 from google import genai
+from google.genai import types
 
 from weather import get_weather
 from crypto_test import get_crypto_price
