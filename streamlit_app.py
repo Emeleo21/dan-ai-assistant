@@ -19,7 +19,7 @@ API_KEY = os.environ.get("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
 if not API_KEY:
     raise RuntimeError("Set GEMINI_API_KEY as a Streamlit secret")
 
-TOOLS = [get_weather, get_crypto_price, get_forex_rate, get_news, get_local_time, web_search, creat_pdf]
+TOOLS = [get_weather, get_crypto_price, get_forex_rate, get_news, get_local_time, web_search, create_pdf]
 
 if "client" not in st.session_state:
     st.session_state.client = genai.Client(api_key=API_KEY)
