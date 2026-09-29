@@ -31,6 +31,18 @@ def new_chat():
         config={"tools": TOOLS},
     )
 
+def send_with_retry(chat, content, retries=2, delay=3):
+    for attempt in range(retries + 1):
+        try:
+            return chat.send_message(content).text
+        except Exception as e:
+            if "503" in str(e) or "UNAVAILABLE" in str(e):
+                if attempt < retries:
+                    time.sleep(delay)
+                    continue
+            return f"Sorry, I couldn't reach the AI right now ({e}). Please try again in a moment."
+    return "Sorry, the AI is currently overloaded. Please try again shortly."
+
 if "chat" not in st.session_state:
     st.session_state.chat = new_chat()
     st.session_state.messages = []
