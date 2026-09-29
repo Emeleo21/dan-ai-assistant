@@ -7,3 +7,4 @@ ddgs
 python-dotenv
 reportlab
 python-docx
+pypdf
