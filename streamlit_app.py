@@ -11,6 +11,7 @@ from news_test import get_news
 from clock_test import get_local_time
 from search_test import web_search
 from pdf_tool import create_pdf
+from docx_test_tool import create_word_document
 
 
 st.set_page_config(page_title="Dan AI", page_icon="🦁", layout="centered")
@@ -19,7 +20,7 @@ API_KEY = os.environ.get("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
 if not API_KEY:
     raise RuntimeError("Set GEMINI_API_KEY as a Streamlit secret")
 
-TOOLS = [get_weather, get_crypto_price, get_forex_rate, get_news, get_local_time, web_search, create_pdf]
+TOOLS = [get_weather, get_crypto_price, get_forex_rate, get_news, get_local_time, web_search, create_pdf, create_word_document]
 
 if "client" not in st.session_state:
     st.session_state.client = genai.Client(api_key=API_KEY)
@@ -57,7 +58,7 @@ with st.sidebar:
 
     # Footer
     st.divider()
-    st.caption("Built with Streamlit + Google Gemini. Live data from Open-Meteo, CoinGecko, Twelve Data, Google News and DuckDuckGo.")
+    st.caption("Programmed by LeoPython, Built with Streamlit + Google Gemini. Live data from Open-Meteo, CoinGecko, Twelve Data, Google News and DuckDuckGo.")
 
 # ---------- Chat history ----------
 for idx, msg in enumerate(st.session_state.messages):
