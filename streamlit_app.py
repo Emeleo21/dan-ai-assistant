@@ -1,4 +1,5 @@
 import os
+import time
 from google.genai import types
 import streamlit as st
 from google import genai
@@ -41,7 +42,7 @@ def send_with_retry(chat, content, retries=2, delay=3):
                     time.sleep(delay)
                     continue
             return f"Sorry, I couldn't reach the AI right now ({e}). Please try again in a moment."
-    return "Sorry, the AI is currently overloaded. Please try again shortly."
+    return "Sorry, the AI is currently busy. Please try again shortly."
 
 if "chat" not in st.session_state:
     st.session_state.chat = new_chat()
@@ -109,10 +110,7 @@ if prompt:
     st.session_state.pending_files = []
     with st.chat_message("assistant", avatar="🦁"):
         with st.spinner("Thinking..."):
-            try:
-                answer = st.session_state.chat.send_message(parts + [question]).text
-            except Exception as e:
-                answer = f"Error: {e}"
+            answer = send_with_retry(st.session_state.chat, parts + [question])
         st.write(answer)
 
         downloads = st.session_state.pop("pending_files", [])
