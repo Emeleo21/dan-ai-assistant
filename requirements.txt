@@ -6,3 +6,4 @@ timezonefinder
 ddgs
 python-dotenv
 reportlab
+python-docx
