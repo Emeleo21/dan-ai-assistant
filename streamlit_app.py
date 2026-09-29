@@ -13,7 +13,7 @@ from search_test import web_search
 from pdf_tool import create_pdf
 
 
-st.set_page_config(page_title="Dan AI", page_icon="🤖", layout="centered")
+st.set_page_config(page_title="Dan AI", page_icon="🦁", layout="centered")
 
 API_KEY = os.environ.get("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
 if not API_KEY:
@@ -61,7 +61,7 @@ with st.sidebar:
 
 # ---------- Chat history ----------
 for idx, msg in enumerate(st.session_state.messages):
-    avatar = "🧑" if msg["role"] == "user" else "🤖"
+    avatar = "🧑" if msg["role"] == "user" else "🦁"
     with st.chat_message(msg["role"], avatar=avatar):
         st.write(msg["content"])
         for name in msg.get("files", []):
@@ -94,7 +94,7 @@ if prompt:
     parts = [types.Part.from_bytes(data=f.getvalue(), mime_type=f.type) for f in files]
 
     st.session_state.pending_files = []
-    with st.chat_message("assistant", avatar="🤖"):
+    with st.chat_message("assistant", avatar="🦁"):
         with st.spinner("Thinking..."):
             try:
                 answer = st.session_state.chat.send_message(parts + [question]).text
