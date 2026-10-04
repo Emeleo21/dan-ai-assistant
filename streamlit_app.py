@@ -120,6 +120,5 @@ save_message("user", question)
         for j, d in enumerate(downloads):
             st.download_button(f"⬇️ Download {d['name']}", d["data"], d["name"], d["mime"], key=f"dl_{new_idx}_{j}")
 
-    st.session_state.messages.append(
-        {"role": "assistant", "content": answer, "downloads": downloads}
-    )
+    st.session_state.messages.append({"role": "assistant", "content": answer, "downloads": downloads})
+save_message("assistant", answer)
