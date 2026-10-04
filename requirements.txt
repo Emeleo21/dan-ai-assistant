@@ -8,3 +8,4 @@ python-dotenv
 reportlab
 python-docx
 pypdf
+sqlite3
