@@ -98,9 +98,8 @@ if prompt:
     question = prompt.text or "Please summarize or describe the attached file."
     files = prompt.files
 
-st.session_state.messages.append(
-        {"role": "user", "content": question, "files": [f.name for f in files]}
-    )
+st.session_state.messages.append({"role": "user", "content": question, "files": [f.name for f in files]})
+save_message("user", question)
     with st.chat_message("user", avatar="🧑"):
         st.write(question)
         for f in files:
