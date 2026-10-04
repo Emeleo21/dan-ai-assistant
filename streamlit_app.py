@@ -68,9 +68,10 @@ with st.sidebar:
 
     # Clear chat button
     if st.button("🗑️ Clear chat", use_container_width=True):
-        st.session_state.messages = []
-        st.session_state.chat = new_chat()
-        st.rerun()
+    st.session_state.messages = []
+    st.session_state.chat = new_chat()
+    clear_messages()
+    st.rerun()
 
     # Footer
     st.divider()
