@@ -98,10 +98,10 @@ if prompt:
     question = prompt.text or "Please summarize or describe the attached file."
     files = prompt.files
 
-st.session_state.messages.append(
+    st.session_state.messages.append(
         {"role": "user", "content": question, "files": [f.name for f in files]}
-)
-save_message("user", question)
+    )
+    save_message("user", question)
     with st.chat_message("user", avatar="🧑"):
         st.write(question)
         for f in files:
@@ -124,4 +124,4 @@ save_message("user", question)
             st.download_button(f"⬇️ Download {d['name']}", d["data"], d["name"], d["mime"], key=f"dl_{new_idx}_{j}")
 
     st.session_state.messages.append({"role": "assistant", "content": answer, "downloads": downloads})
-save_message("assistant", answer)
+    save_message("assistant", answer)
