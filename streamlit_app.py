@@ -13,6 +13,9 @@ from clock_test import get_local_time
 from search_test import web_search
 from pdf_tool import create_pdf
 from docx_test_tool import create_word_document
+from history_db import init_db, save_message, load_messages, clear_messages
+
+init_db()
 
 
 st.set_page_config(page_title="Dan AI", page_icon="🦁", layout="centered")
