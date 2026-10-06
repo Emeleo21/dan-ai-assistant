@@ -18,6 +18,10 @@ from history_db import init_db, save_message, load_messages, clear_messages
 
 init_db()
 
+if "sid" not in st.query_params:
+    st.query_params["sid"] = str(uuid.uuid4())
+SESSION_ID = st.query_params["sid"]
+
 
 st.set_page_config(page_title="Dan AI", page_icon="🦁", layout="centered")
 
