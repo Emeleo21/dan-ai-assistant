@@ -8,6 +8,7 @@ def init_db():
     conn.execute("""
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
             role TEXT,
             content TEXT
         )
@@ -15,20 +16,26 @@ def init_db():
     conn.commit()
     conn.close()
 
-def save_message(role: str, content: str):
+def save_message(session_id: str, role: str, content: str):
     conn = sqlite3.connect(DB_PATH)
-    conn.execute("INSERT INTO messages (role, content) VALUES (?, ?)", (role, content))
+    conn.execute(
+        "INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+        (session_id, role, content),
+    )
     conn.commit()
     conn.close()
 
-def load_messages():
+def load_messages(session_id: str):
     conn = sqlite3.connect(DB_PATH)
-    rows = conn.execute("SELECT role, content FROM messages ORDER BY id").fetchall()
+    rows = conn.execute(
+        "SELECT role, content FROM messages WHERE session_id = ? ORDER BY id",
+        (session_id,),
+    ).fetchall()
     conn.close()
     return [{"role": r, "content": c} for r, c in rows]
 
-def clear_messages():
+def clear_messages(session_id: str):
     conn = sqlite3.connect(DB_PATH)
-    conn.execute("DELETE FROM messages")
+    conn.execute("DELETE FROM messages WHERE session_id = ?", (session_id,))
     conn.commit()
     conn.close()
