@@ -54,8 +54,7 @@ def send_with_retry(chat, content, retries=2, delay=3):
 
 if "chat" not in st.session_state:
     st.session_state.chat = new_chat()
-    st.session_state.messages = load_messages()
-
+    st.session_state.messages = load_messages(SESSION_ID)
 # ---------- Header ----------
 st.title("Dan AI")
 st.caption("Your personal assistant — weather, crypto, forex, news, time zones, and web search, all in one place.")
