@@ -13,6 +13,10 @@ def init_db():
             content TEXT
         )
     """)
+    # Migrate older databases that don't have session_id yet
+    cols = [row[1] for row in conn.execute("PRAGMA table_info(messages)")]
+    if "session_id" not in cols:
+        conn.execute("ALTER TABLE messages ADD COLUMN session_id TEXT")
     conn.commit()
     conn.close()
 
